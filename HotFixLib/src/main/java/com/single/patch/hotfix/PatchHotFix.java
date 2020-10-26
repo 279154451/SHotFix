@@ -17,12 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EnjoyFix {
+public class PatchHotFix {
 
     private static final String TAG = "EnjoyFix";
 
     private static File initHack(Context context) {
-
         File hackDir = context.getDir("hack", Context.MODE_PRIVATE);
         File hackFile = new File(hackDir, "hack.jar");
         if (!hackFile.exists()) {
@@ -97,7 +96,7 @@ public class EnjoyFix {
                 NoSuchFieldException, InvocationTargetException, NoSuchMethodException,
                 IOException {
             //找到 pathList
-            Field pathListField = ShareReflectUtil.findField(loader, "pathList");
+            Field pathListField = PatchReflectUtil.findField(loader, "pathList");
             Object dexPathList = pathListField.get(loader);
 
             ArrayList<IOException> suppressedExceptions = new ArrayList<>();
@@ -108,7 +107,7 @@ public class EnjoyFix {
                     suppressedExceptions);
 
             //将原本的 dexElements 与 makePathElements生成的数组合并
-            ShareReflectUtil.expandFieldArray(dexPathList, "dexElements", objects);
+            PatchReflectUtil.expandFieldArray(dexPathList, "dexElements", objects);
             if (suppressedExceptions.size() > 0) {
                 for (IOException e : suppressedExceptions) {
                     Log.w(TAG, "Exception in makePathElement", e);
@@ -126,7 +125,7 @@ public class EnjoyFix {
                 ArrayList<IOException> suppressedExceptions)
                 throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
             //通过阅读android6、7、8、9源码，都存在makePathElements方法
-            Method makePathElements = ShareReflectUtil.findMethod(dexPathList, "makePathElements",
+            Method makePathElements = PatchReflectUtil.findMethod(dexPathList, "makePathElements",
                     List.class, File.class,
                     List.class);
             return (Object[]) makePathElements.invoke(dexPathList, files, optimizedDirectory,
@@ -141,10 +140,10 @@ public class EnjoyFix {
                 throws IllegalArgumentException, IllegalAccessException,
                 NoSuchFieldException, InvocationTargetException, NoSuchMethodException,
                 IOException {
-            Field pathListField = ShareReflectUtil.findField(loader, "pathList");
+            Field pathListField = PatchReflectUtil.findField(loader, "pathList");
             Object dexPathList = pathListField.get(loader);
             ArrayList<IOException> suppressedExceptions = new ArrayList<IOException>();
-            ShareReflectUtil.expandFieldArray(dexPathList, "dexElements",
+            PatchReflectUtil.expandFieldArray(dexPathList, "dexElements",
                     makeDexElements(dexPathList,
                             new ArrayList<File>(additionalClassPathEntries), optimizedDirectory,
                             suppressedExceptions));
@@ -160,7 +159,7 @@ public class EnjoyFix {
                 Object dexPathList, ArrayList<File> files, File optimizedDirectory,
                 ArrayList<IOException> suppressedExceptions)
                 throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-            Method makeDexElements = ShareReflectUtil.findMethod(dexPathList, "makeDexElements",
+            Method makeDexElements = PatchReflectUtil.findMethod(dexPathList, "makeDexElements",
                     ArrayList.class, File.class,
                     ArrayList.class);
 
@@ -181,10 +180,10 @@ public class EnjoyFix {
                 throws IllegalArgumentException, IllegalAccessException,
                 NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
 
-            Field pathListField = ShareReflectUtil.findField(loader, "pathList");
+            Field pathListField = PatchReflectUtil.findField(loader, "pathList");
             Object dexPathList = pathListField.get(loader);
 
-            ShareReflectUtil.expandFieldArray(dexPathList, "dexElements",
+            PatchReflectUtil.expandFieldArray(dexPathList, "dexElements",
                     makeDexElements(dexPathList,
                             new ArrayList<File>(additionalClassPathEntries), optimizedDirectory));
         }
@@ -194,7 +193,7 @@ public class EnjoyFix {
                 throws IllegalAccessException, InvocationTargetException,
                 NoSuchMethodException {
             Method makeDexElements =
-                    ShareReflectUtil.findMethod(dexPathList, "makeDexElements", ArrayList.class,
+                    PatchReflectUtil.findMethod(dexPathList, "makeDexElements", ArrayList.class,
                             File.class);
             return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory);
         }

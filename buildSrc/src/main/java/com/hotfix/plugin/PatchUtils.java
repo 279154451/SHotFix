@@ -19,7 +19,7 @@ import java.util.Map;
  * @author Lance
  * @date 2019-09-23
  */
-public class Utils {
+public class PatchUtils {
 
     public static String capitalize(String self) {
         return self.length() == 0 ? "" :

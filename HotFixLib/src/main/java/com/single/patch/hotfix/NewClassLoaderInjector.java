@@ -24,15 +24,15 @@ public class NewClassLoaderInjector {
     private static ClassLoader createNewClassLoader(Context context, ClassLoader oldClassLoader,
                                                     ClassLoader dispatchClassLoader) throws Throwable {
         //得到pathList
-        Field pathListField = ShareReflectUtil.findField(oldClassLoader, "pathList");
+        Field pathListField = PatchReflectUtil.findField(oldClassLoader, "pathList");
         Object oldPathList = pathListField.get(oldClassLoader);
 
         //dexElements
-        Field dexElementsField = ShareReflectUtil.findField(oldPathList, "dexElements");
+        Field dexElementsField = PatchReflectUtil.findField(oldPathList, "dexElements");
         Object[] oldDexElements = (Object[]) dexElementsField.get(oldPathList);
 
         //从Element上得到 dexFile
-        Field dexFileField = ShareReflectUtil.findField(oldDexElements[0], "dexFile");
+        Field dexFileField = PatchReflectUtil.findField(oldDexElements[0], "dexFile");
 
         // 获得原始的dexPath用于构造classloader
         StringBuilder dexPathBuilder = new StringBuilder();
@@ -61,7 +61,7 @@ public class NewClassLoaderInjector {
         final String combinedDexPath = dexPathBuilder.toString();
 
         //  app的native库（so） 文件目录 用于构造classloader
-        Field nativeLibraryDirectoriesField = ShareReflectUtil.findField(oldPathList, "nativeLibraryDirectories");
+        Field nativeLibraryDirectoriesField = PatchReflectUtil.findField(oldPathList, "nativeLibraryDirectories");
         List<File> oldNativeLibraryDirectories = (List<File>) nativeLibraryDirectoriesField.get(oldPathList);
 
 
@@ -93,18 +93,18 @@ public class NewClassLoaderInjector {
     private static void doInject(Application app, ClassLoader classLoader) throws Throwable {
         Thread.currentThread().setContextClassLoader(classLoader);
 
-        Context baseContext = (Context) ShareReflectUtil.findField(app, "mBase").get(app);
-        Object basePackageInfo = ShareReflectUtil.findField(baseContext, "mPackageInfo").get(baseContext);
-        ShareReflectUtil.findField(basePackageInfo, "mClassLoader").set(basePackageInfo, classLoader);
+        Context baseContext = (Context) PatchReflectUtil.findField(app, "mBase").get(app);
+        Object basePackageInfo = PatchReflectUtil.findField(baseContext, "mPackageInfo").get(baseContext);
+        PatchReflectUtil.findField(basePackageInfo, "mClassLoader").set(basePackageInfo, classLoader);
 
         if (Build.VERSION.SDK_INT < 27) {
             Resources res = app.getResources();
             try {
-                ShareReflectUtil.findField(res, "mClassLoader").set(res, classLoader);
+                PatchReflectUtil.findField(res, "mClassLoader").set(res, classLoader);
 
-                final Object drawableInflater = ShareReflectUtil.findField(res, "mDrawableInflater").get(res);
+                final Object drawableInflater = PatchReflectUtil.findField(res, "mDrawableInflater").get(res);
                 if (drawableInflater != null) {
-                    ShareReflectUtil.findField(drawableInflater, "mClassLoader").set(drawableInflater, classLoader);
+                    PatchReflectUtil.findField(drawableInflater, "mClassLoader").set(drawableInflater, classLoader);
                 }
             } catch (Throwable ignored) {
                 // Ignored.

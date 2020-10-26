@@ -35,13 +35,13 @@ public class PatchGenerator {
         this.patchFile = patchFile;
         this.jarFile = jarFile;
         if (hexFile.exists()) {
-            oldHexs = Utils.readHex(hexFile);
+            oldHexs = PatchUtils.readHex(hexFile);
         }
 
     }
 
     public void checkClass(String className, String hex, byte[] byteCode) {
-        if (Utils.isEmpty(oldHexs)) {
+        if (PatchUtils.isEmpty(oldHexs)) {
             return;
         }
         String oldHex = oldHexs.get(className);

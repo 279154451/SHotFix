@@ -8,6 +8,6 @@ package com.single.code.shotfix;
 public class BugTest {
     public static void test(){
         System.out.println("bug");
-        throw new NullPointerException("哈哈出错啦");
+//        throw new NullPointerException("哈哈出错啦");
     }
 }

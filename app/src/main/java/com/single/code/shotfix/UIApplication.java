@@ -3,7 +3,7 @@ package com.single.code.shotfix;
 import android.app.Application;
 import android.content.Context;
 
-import com.single.patch.hotfix.EnjoyFix;
+import com.single.patch.hotfix.PatchHotFix;
 
 import java.io.File;
 
@@ -21,6 +21,6 @@ public class UIApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        EnjoyFix.installPatch(this, new File("/sdcard/patch.jar"));
+        PatchHotFix.installPatch(this, new File("/sdcard/patch.jar"));
     }
 }

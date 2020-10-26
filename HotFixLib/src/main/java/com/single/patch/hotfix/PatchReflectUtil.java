@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-public class ShareReflectUtil {
+public class PatchReflectUtil {
 
 
     /**
@@ -65,6 +65,7 @@ public class ShareReflectUtil {
 
 
     /**
+     * 将补丁Element数组和原Element数组合并成一个新的Element数组，并替换掉classLoader中 pathList的 dexelements
      * @param instance
      * @param fieldName
      * @param fixs      补丁的Element数组

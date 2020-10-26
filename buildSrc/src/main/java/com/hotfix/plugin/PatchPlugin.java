@@ -76,12 +76,12 @@ public class PatchPlugin implements Plugin<Project> {
         //获得: debug/release
         String variantName = variant.getName();
         //首字母大写
-        String capitalizeName = Utils.capitalize(variantName);
+        String capitalizeName = PatchUtils.capitalize(variantName);
 
         //热修复的输出目录
         File outputDir;
         //如果没有指名输出目录，默认输出到 build/patch/debug(release) 下
-        if (!Utils.isEmpty(patchExtension.output)) {
+        if (!PatchUtils.isEmpty(patchExtension.output)) {
             outputDir = new File(patchExtension.output, variantName);
         } else {
             outputDir = new File(project.getBuildDir(), "patch/" + variantName);
@@ -120,7 +120,7 @@ public class PatchPlugin implements Plugin<Project> {
             });
         }
         //将上次混淆的mapping应用到本次,如果没有上次的混淆文件就没操作
-        Utils.applyMapping(proguardTask, mappingBak);
+        PatchUtils.applyMapping(proguardTask, mappingBak);
 
 
         /**
@@ -168,7 +168,7 @@ public class PatchPlugin implements Plugin<Project> {
 
                 }
                 //类的md5集合 写入到文件
-                Utils.writeHex(newHexs, hexFile);
+                PatchUtils.writeHex(newHexs, hexFile);
                 try {
                     //生成补丁
                     patchGenerator.generate();
@@ -193,14 +193,14 @@ public class PatchPlugin implements Plugin<Project> {
         //注意这里的filePath包含了目录+包名+类名，所以去掉目录
         String className = filePath.split(dirName)[1].substring(1);
         //application或者android support我们不管
-        if (className.startsWith(applicationName) || Utils.isAndroidClass(className)) {
+        if (className.startsWith(applicationName) || PatchUtils.isAndroidClass(className)) {
             return;
         }
         try {
             FileInputStream is = new FileInputStream(filePath);
             //执行插桩
             byte[] byteCode = ClassUtils.referHackWhenInit(is);
-            String hex = Utils.hex(byteCode);
+            String hex = PatchUtils.hex(byteCode);
             is.close();
 
             FileOutputStream os = new FileOutputStream(filePath);
@@ -235,10 +235,10 @@ public class PatchPlugin implements Plugin<Project> {
 
                 String className = jarEntry.getName();
                 if (className.endsWith(".class") && !className.startsWith(applicationName)
-                        && !Utils.isAndroidClass(className) && !className.startsWith("com/enjoy" +
+                        && !PatchUtils.isAndroidClass(className) && !className.startsWith("com/enjoy" +
                         "/patch")) {
                     byte[] byteCode = ClassUtils.referHackWhenInit(is);
-                    String hex = Utils.hex(byteCode);
+                    String hex = PatchUtils.hex(byteCode);
                     is.close();
                     hexs.put(className, hex);
                     //对比缓存的md5，不一致则放入补丁
