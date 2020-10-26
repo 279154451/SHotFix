@@ -1,0 +1,4 @@
+include ':hack'
+include ':HotFixLib'
+include ':app'
+rootProject.name = "SHotFix"
