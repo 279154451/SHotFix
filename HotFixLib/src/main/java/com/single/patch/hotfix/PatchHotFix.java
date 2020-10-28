@@ -55,6 +55,11 @@ public class PatchHotFix {
 
     }
 
+    /**
+     *
+     * @param application
+     * @param patch 补丁包patch.jar
+     */
     public static void installPatch(Application application, File patch) {
         File hackFile = initHack(application);
         ClassLoader classLoader = application.getClassLoader();
@@ -140,8 +145,8 @@ public class PatchHotFix {
                 throws IllegalArgumentException, IllegalAccessException,
                 NoSuchFieldException, InvocationTargetException, NoSuchMethodException,
                 IOException {
-            Field pathListField = PatchReflectUtil.findField(loader, "pathList");
-            Object dexPathList = pathListField.get(loader);
+            Field pathListField = PatchReflectUtil.findField(loader, "pathList");//反射获取pathList属性
+            Object dexPathList = pathListField.get(loader);//获取pathList对象
             ArrayList<IOException> suppressedExceptions = new ArrayList<IOException>();
             PatchReflectUtil.expandFieldArray(dexPathList, "dexElements",
                     makeDexElements(dexPathList,
@@ -155,8 +160,18 @@ public class PatchHotFix {
             }
         }
 
-        private static Object[] makeDexElements(
-                Object dexPathList, ArrayList<File> files, File optimizedDirectory,
+        /**
+         *
+         * @param dexPathList
+         * @param files 补丁包文件
+         * @param optimizedDirectory opt优化文件存储路径
+         * @param suppressedExceptions
+         * @return
+         * @throws IllegalAccessException
+         * @throws InvocationTargetException
+         * @throws NoSuchMethodException
+         */
+        private static Object[] makeDexElements(Object dexPathList, ArrayList<File> files, File optimizedDirectory,
                 ArrayList<IOException> suppressedExceptions)
                 throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
             Method makeDexElements = PatchReflectUtil.findMethod(dexPathList, "makeDexElements",

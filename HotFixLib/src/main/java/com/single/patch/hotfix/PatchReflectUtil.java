@@ -68,12 +68,12 @@ public class PatchReflectUtil {
      * 将补丁Element数组和原Element数组合并成一个新的Element数组，并替换掉classLoader中 pathList的 dexelements
      * @param instance
      * @param fieldName
-     * @param fixs      补丁的Element数组
+     * @param patchs      补丁的Element数组
      * @throws NoSuchFieldException
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    public static void expandFieldArray(Object instance, String fieldName, Object[] fixs)
+    public static void expandFieldArray(Object instance, String fieldName, Object[] patchs)
             throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         //拿到 classloader中的dexelements 数组
         Field jlrField = findField(instance, fieldName);
@@ -83,11 +83,11 @@ public class PatchReflectUtil {
 
         //合并后的数组
         Object[] newElements = (Object[]) Array.newInstance(old.getClass().getComponentType(),
-                old.length + fixs.length);
+                old.length + patchs.length);
 
         // 先拷贝新数组
-        System.arraycopy(fixs, 0, newElements, 0, fixs.length);
-        System.arraycopy(old, 0, newElements, fixs.length, old.length);
+        System.arraycopy(patchs, 0, newElements, 0, patchs.length);
+        System.arraycopy(old, 0, newElements, patchs.length, old.length);
 
         //修改 classLoader中 pathList的 dexelements
         jlrField.set(instance, newElements);
