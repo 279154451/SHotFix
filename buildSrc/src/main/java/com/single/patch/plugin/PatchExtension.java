@@ -1,4 +1,4 @@
-package com.hotfix.plugin;
+package com.single.patch.plugin;
 
 /**
  * @author Lance* @date 2019-09-03

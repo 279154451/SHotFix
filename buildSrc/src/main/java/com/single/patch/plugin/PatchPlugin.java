@@ -1,4 +1,4 @@
-package com.hotfix.plugin;
+package com.single.patch.plugin;
 
 import com.android.build.gradle.AppExtension;
 import com.android.build.gradle.AppPlugin;
@@ -235,8 +235,7 @@ public class PatchPlugin implements Plugin<Project> {
 
                 String className = jarEntry.getName();
                 if (className.endsWith(".class") && !className.startsWith(applicationName)
-                        && !PatchUtils.isAndroidClass(className) && !className.startsWith("com/enjoy" +
-                        "/patch")) {
+                        && !PatchUtils.isAndroidClass(className) && !className.startsWith("com/single/patch")) {
                     byte[] byteCode = ClassUtils.referHackWhenInit(is);
                     String hex = PatchUtils.hex(byteCode);
                     is.close();

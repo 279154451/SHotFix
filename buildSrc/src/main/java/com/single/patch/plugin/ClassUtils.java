@@ -1,4 +1,4 @@
-package com.hotfix.plugin;
+package com.single.patch.plugin;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -32,7 +32,7 @@ public class ClassUtils {
                     public void visitInsn(int opcode) {
                         //在构造方法中插入AntilazyLoad引用
                         if ("<init>".equals(name) && opcode == Opcodes.RETURN) {
-                            super.visitLdcInsn(Type.getType("Lcom/enjoy/patch/hack/AntilazyLoad;"));
+                            super.visitLdcInsn(Type.getType("Lcom/single/patch/hack/AntilazyLoad;"));
                         }
                         super.visitInsn(opcode);
                     }

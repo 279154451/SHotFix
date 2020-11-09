@@ -1,5 +1,7 @@
 package com.single.code.shotfix;
 
+import android.util.Log;
+
 /**
  * 创建时间：2020/10/25
  * 创建人：singleCode
@@ -8,6 +10,7 @@ package com.single.code.shotfix;
 public class BugTest {
     public static void test(){
         System.out.println("bug");
-//        throw new NullPointerException("哈哈出错啦");
+        Log.d("BugTest", "test: bug ");
+        throw new NullPointerException("哈哈出错啦");
     }
 }

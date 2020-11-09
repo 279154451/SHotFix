@@ -1,7 +1,7 @@
 
 apply plugin: 'com.android.application'
 
-apply plugin: com.hotfix.plugin.PatchPlugin
+apply plugin: com.single.patch.plugin.PatchPlugin
 
 
 patch {

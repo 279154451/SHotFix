@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--内部的element可以是files-path，cache-path，external-path，external-files-path，external-cache-path，-->
+    <!--分别对应Context.getFilesDir()，Context.getCacheDir()，Environment.getExternalStorageDirectory()，Context.getExternalFilesDir()，Context.getExternalCacheDir()等几个方法。-->
+    <!--后来翻看源码发现还有一个没有写进文档的，但是也可以使用的element，是root-path，直接对应文件系统根目录。不过既然没有写进文档中，其实还是有将来移除的可能的。使用的话需要注意一下风险。-->
+
+    <paths>
+        <external-path name="camera_photos" path="" />
+
+        <external-path path="Android/data/com.single.code.shotfix/" name="files_root" />
+        <external-path path="." name="external_storage_root" />
+        <external-files-path name="opensdk_external" path="Images/tmp"/>
+        <root-path name="opensdk_root" path=""/>
+    </paths>
+</resources>

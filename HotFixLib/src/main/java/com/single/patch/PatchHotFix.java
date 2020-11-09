@@ -1,4 +1,4 @@
-package com.single.patch.hotfix;
+package com.single.patch;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.util.Log;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class PatchHotFix {
 
-    private static final String TAG = "EnjoyFix";
+    private static final String TAG = "PatchHotFix";
 
     private static File initHack(Context context) {
         File hackDir = context.getDir("hack", Context.MODE_PRIVATE);
@@ -28,8 +29,7 @@ public class PatchHotFix {
             BufferedInputStream is = null;
             BufferedOutputStream os = null;
             try {
-                is = new BufferedInputStream(context.getAssets().open("hack" +
-                        ".jar"));
+                is = new BufferedInputStream(context.getAssets().open("hack.jar"));
                 os = new BufferedOutputStream(new FileOutputStream(hackFile));
                 byte[] buffer = new byte[4096];
                 int len;
@@ -54,6 +54,14 @@ public class PatchHotFix {
         return hackFile;
 
     }
+    private static File copyPath(Context context,File patch){
+        File patchFile  = patch;
+        if(patch.exists()){
+            String filePath = FileUtilsToQ.checkAndroidQFile(context,patch.getAbsolutePath(),"patch.jar");
+            patchFile = new File(filePath);
+        }
+        return patchFile;
+    }
 
     /**
      *
@@ -62,9 +70,11 @@ public class PatchHotFix {
      */
     public static void installPatch(Application application, File patch) {
         File hackFile = initHack(application);
+//        patch = copyPath(application,patch);
         ClassLoader classLoader = application.getClassLoader();
         List<File> files = new ArrayList<>();
         if (patch.exists()) {
+            Log.d(TAG, "installPatch: patch="+patch.getAbsolutePath());
             files.add(patch);
         }
         files.add(hackFile);

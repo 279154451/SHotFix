@@ -1,4 +1,4 @@
-package com.single.patch.hotfix;
+package com.single.patch;
 
 import android.app.Application;
 import android.content.Context;

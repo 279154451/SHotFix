@@ -1,4 +1,4 @@
-package com.single.patch.hotfix;
+package com.single.patch;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;

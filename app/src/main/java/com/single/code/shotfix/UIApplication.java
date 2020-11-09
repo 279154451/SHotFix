@@ -3,7 +3,7 @@ package com.single.code.shotfix;
 import android.app.Application;
 import android.content.Context;
 
-import com.single.patch.hotfix.PatchHotFix;
+import com.single.patch.PatchHotFix;
 
 import java.io.File;
 

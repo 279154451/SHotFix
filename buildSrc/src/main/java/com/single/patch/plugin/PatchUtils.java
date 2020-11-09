@@ -1,4 +1,4 @@
-package com.hotfix.plugin;
+package com.single.patch.plugin;
 
 import com.android.build.gradle.internal.pipeline.TransformTask;
 import com.android.build.gradle.internal.transforms.ProGuardTransform;
