@@ -18,9 +18,16 @@ import java.io.InputStream;
 public class ClassUtils {
 
 
+    /**
+     *
+     * @param inputStream  class文件的输入流
+     * @return
+     * @throws IOException
+     */
     public static byte[] referHackWhenInit(InputStream inputStream) throws IOException {
-        ClassReader cr = new ClassReader(inputStream);
-        ClassWriter cw = new ClassWriter(cr, 0);
+        ClassReader cr = new ClassReader(inputStream);//class的解析器
+        ClassWriter cw = new ClassWriter(cr, 0);//class的输出器
+        //class的访问者，相当于回调，解析器解析的结果，回调给访问者
         ClassVisitor cv = new ClassVisitor(Opcodes.ASM5, cw) {
             @Override
             public MethodVisitor visitMethod(int access, final String name, String desc,
@@ -41,6 +48,7 @@ public class ClassUtils {
             }
 
         };
+        //启动分析，启动后ClassReader 开始解析class数据，然后回调访问者的visitMethod
         cr.accept(cv, 0);
         return cw.toByteArray();
     }

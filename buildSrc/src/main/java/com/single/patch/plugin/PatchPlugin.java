@@ -133,7 +133,7 @@ public class PatchPlugin implements Plugin<Project> {
         // 用dx打包后的jar包
         final File patchFile = new File(outputDir, "patch.jar");
 
-        //打包dex任务
+        //打包获取dex任务，并拦截干预
         final Task dexTask =
                 project.getTasks().findByName("transformClassesWithDexBuilderFor" + capitalizeName);
 
@@ -192,6 +192,7 @@ public class PatchPlugin implements Plugin<Project> {
         String filePath = file.getAbsolutePath();
         //注意这里的filePath包含了目录+包名+类名，所以去掉目录
         String className = filePath.split(dirName)[1].substring(1);
+        System.out.println("className="+className);
         //application或者android support我们不管
         if (className.startsWith(applicationName) || PatchUtils.isAndroidClass(className)) {
             return;
@@ -234,8 +235,10 @@ public class PatchPlugin implements Plugin<Project> {
                 InputStream is = jarFile.getInputStream(jarEntry);
 
                 String className = jarEntry.getName();
+//                System.out.println("classJarName="+className);
                 if (className.endsWith(".class") && !className.startsWith(applicationName)
                         && !PatchUtils.isAndroidClass(className) && !className.startsWith("com/single/patch")) {
+                    System.out.println("classJarName="+className);
                     byte[] byteCode = ClassUtils.referHackWhenInit(is);
                     String hex = PatchUtils.hex(byteCode);
                     is.close();

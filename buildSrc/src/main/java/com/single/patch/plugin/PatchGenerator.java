@@ -23,17 +23,17 @@ public class PatchGenerator {
     private File patchFile;
     private String buildToolsVersion;
     private Project project;
-    private File jarFile;
+    private File patchClassFile;
     private Map<String, String> oldHexs;
     private JarOutputStream jarOutputStream;
 
-    public PatchGenerator(Project project, File patchFile, File jarFile,
+    public PatchGenerator(Project project, File patchFile, File patchClassFile,
                           File hexFile) {
         this.project = project;
         AppExtension android = project.getExtensions().getByType(AppExtension.class);
         buildToolsVersion = android.getBuildToolsVersion();
         this.patchFile = patchFile;
-        this.jarFile = jarFile;
+        this.patchClassFile = patchClassFile;
         if (hexFile.exists()) {
             oldHexs = PatchUtils.readHex(hexFile);
         }
@@ -62,7 +62,7 @@ public class PatchGenerator {
     private JarOutputStream getOutput() {
         if (jarOutputStream == null) {
             try {
-                jarOutputStream = new JarOutputStream(new FileOutputStream(jarFile));
+                jarOutputStream = new JarOutputStream(new FileOutputStream(patchClassFile));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -71,7 +71,7 @@ public class PatchGenerator {
     }
 
     public void generate() throws Exception {
-        if (!jarFile.exists()) {
+        if (!patchClassFile.exists()) {
             return;
         }
         JarOutputStream output = getOutput();
@@ -92,11 +92,11 @@ public class PatchGenerator {
         String dxPath = sdkDir + "/build-tools/" + buildToolsVersion +
                 "/dx" + cmdExt;
         String patch = "--output=" + patchFile.getAbsolutePath();
-        String cmd = dxPath + " --dex " + patch + " " + jarFile.getAbsolutePath();
+        String cmd = dxPath + " --dex " + patch + " " + patchClassFile.getAbsolutePath();
         Process process =
                 Runtime.getRuntime().exec(cmd);
         process.waitFor();
-        jarFile.delete();
+        patchClassFile.delete();
         //命令执行失败
         if (process.exitValue() != 0) {
             throw new IOException("generate patch error:" + cmd);
